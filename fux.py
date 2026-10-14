@@ -45,10 +45,15 @@ class FuXApp:
         self.font = pygame.font.SysFont("monospace", 13)
         self.big_font = pygame.font.SysFont("monospace", 15, bold=True)
 
-        try:
-            avatar = pygame.image.load(AVATAR_PATH).convert_alpha()
-        except (pygame.error, FileNotFoundError):
-            # Fallback: draw a simple glowing orb if the avatar PNG isn't here
+        for _avatar_file in ("fux_avatar.png", "fux_avatar.jpg"):
+            _p = os.path.join(HERE, "assets", _avatar_file)
+            try:
+                avatar = pygame.image.load(_p).convert_alpha()
+                break
+            except (pygame.error, FileNotFoundError):
+                continue
+        else:
+            # Fallback: draw a simple glowing orb if no avatar file is here
             avatar = pygame.Surface((AVATAR_SIZE, AVATAR_SIZE), pygame.SRCALPHA)
             pygame.draw.circle(avatar, (110, 70, 200, 255),
                                (AVATAR_SIZE // 2, AVATAR_SIZE // 2), AVATAR_SIZE // 2)
