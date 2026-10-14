@@ -33,7 +33,7 @@ MOODS = {
 }
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-AVATAR_PATH = os.path.join(HERE, "assets", "fux_avatar.png")
+AVATAR_PATH = os.path.join(HERE, "assets", "fux_avatar.jpg")
 
 
 class FuXApp:
@@ -45,7 +45,15 @@ class FuXApp:
         self.font = pygame.font.SysFont("monospace", 13)
         self.big_font = pygame.font.SysFont("monospace", 15, bold=True)
 
-        avatar = pygame.image.load(AVATAR_PATH).convert_alpha()
+        try:
+            avatar = pygame.image.load(AVATAR_PATH).convert_alpha()
+        except (pygame.error, FileNotFoundError):
+            # Fallback: draw a simple glowing orb if the avatar PNG isn't here
+            avatar = pygame.Surface((AVATAR_SIZE, AVATAR_SIZE), pygame.SRCALPHA)
+            pygame.draw.circle(avatar, (110, 70, 200, 255),
+                               (AVATAR_SIZE // 2, AVATAR_SIZE // 2), AVATAR_SIZE // 2)
+            pygame.draw.circle(avatar, (150, 255, 90, 255),
+                               (AVATAR_SIZE // 2, AVATAR_SIZE // 2), AVATAR_SIZE // 3)
         self.avatar = pygame.transform.smoothscale(avatar, (AVATAR_SIZE, AVATAR_SIZE))
 
         self.mood = "idle"
